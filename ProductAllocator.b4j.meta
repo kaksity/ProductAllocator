@@ -1,12 +1,15 @@
 ﻿ModuleBookmarks0=
 ModuleBookmarks1=
 ModuleBookmarks2=
+ModuleBookmarks3=
 ModuleBreakpoints0=
 ModuleBreakpoints1=
 ModuleBreakpoints2=
+ModuleBreakpoints3=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
 ModuleClosedNodes2=
-NavigationStack=Main,Process_Globals,7,0,Main,AppStart,13,0,Utility,LoadConfigurationSetting,6,0,ShopRegisterationHandler,Handle,50,6
+ModuleClosedNodes3=
+NavigationStack=Main,Process_Globals,7,0,Utility,LoadConfigurationSetting,6,0,Main,AppStart,27,6,ShopRegisterationHandler,Handle,14,6,ShopLoginHandler,Class_Globals,1,0,ShopLoginHandler,Handle,61,6
 SelectedBuild=0
-VisibleModules=2,1
+VisibleModules=1,2
