@@ -7,15 +7,25 @@ Library1=jcore
 Library2=jserver
 Library3=jsql
 Library4=json
-Module1=Utility
+Library5=javaobject
+Module1=ShopRegisterationHandler
+Module2=Utility
 NumberOfFiles=1
-NumberOfLibraries=4
-NumberOfModules=1
+NumberOfLibraries=5
+NumberOfModules=2
 Version=8.5
 @EndOfDesignText@
 #Region Project Attributes 
 	#CommandLineArgs:
 	#MergeLibraries: True 
+	#AdditionalJar: postgresql
+	#AdditionalJar: jjwt-api-0.11.2
+	#AdditionalJar: jjwt-impl-0.11.2
+	#AdditionalJar: jjwt-jackson-0.11.2
+	#AdditionalJar: jjwt-0.8.0
+	#AdditionalJar: jackson-databind-2.8.9
+	#AdditionalJar: jackson-core-2.8.9
+	#AdditionalJar: jackson-annotations-2.8.0
 #End Region
 
 Sub Process_Globals
@@ -31,7 +41,9 @@ Sub AppStart (Args() As String)
 	srvr.Initialize("srvr")
 	srvr.Port = serverConfiguration.Get("ServerPort")
 	srvr.StaticFilesFolder = File.Combine(File.DirApp, "www")
+	srvr.AddHandler("/api/v1/shop/register","ShopRegisterationHandler",False)
 	srvr.Start
+	
 	
 	
 	Log($"Server is up and running at http://localhost:${srvr.Port}"$)
