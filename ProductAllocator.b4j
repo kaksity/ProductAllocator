@@ -1,0 +1,27 @@
+﻿AppType=StandardJava
+Build1=Default,b4j.example
+Group=Default Group
+Library1=jcore
+Library2=jserver
+NumberOfFiles=0
+NumberOfLibraries=2
+NumberOfModules=0
+Version=8.5
+@EndOfDesignText@
+#Region Project Attributes 
+	#CommandLineArgs:
+	#MergeLibraries: True 
+#End Region
+
+Sub Process_Globals
+	Private srvr As Server
+End Sub
+
+Sub AppStart (Args() As String)
+	srvr.Initialize("srvr")
+	srvr.Port = 51042
+	srvr.StaticFilesFolder = File.Combine(File.DirApp, "www")
+	srvr.Start
+	StartMessageLoop
+	'open browser and navigate to: http://127.0.0.1:51042/
+End Sub
