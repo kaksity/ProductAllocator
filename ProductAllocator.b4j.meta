@@ -1,6 +1,9 @@
 ﻿ModuleBookmarks0=
+ModuleBookmarks1=
 ModuleBreakpoints0=
+ModuleBreakpoints1=
 ModuleClosedNodes0=1
-NavigationStack=WSGuessMyNumber,txtNumber_KeyUp,51,0,Main,Process_Globals,8,0,GuessMyNumber,Handle,10,0,Main,AppStart,13,6
+ModuleClosedNodes1=
+NavigationStack=Utility,Process_Globals,4,0,Utility,LoadConfigurationSetting,6,6,Main,Process_Globals,7,6,Main,AppStart,22,6
 SelectedBuild=0
-VisibleModules=
+VisibleModules=1

@@ -1,11 +1,16 @@
 ﻿AppType=StandardJava
 Build1=Default,b4j.example
+File1=config.properties
+FileGroup1=Default Group
 Group=Default Group
 Library1=jcore
 Library2=jserver
-NumberOfFiles=0
-NumberOfLibraries=2
-NumberOfModules=0
+Library3=jsql
+Library4=json
+Module1=Utility
+NumberOfFiles=1
+NumberOfLibraries=4
+NumberOfModules=1
 Version=8.5
 @EndOfDesignText@
 #Region Project Attributes 
@@ -15,13 +20,22 @@ Version=8.5
 
 Sub Process_Globals
 	Private srvr As Server
+	Public poolOfConnection As ConnectionPool
 End Sub
 
 Sub AppStart (Args() As String)
+	Dim serverConfiguration As Map = Utility.LoadConfigurationSetting	
+	
+	poolOfConnection.Initialize(serverConfiguration.Get("DBJDBC"),serverConfiguration.Get("DBURL"),serverConfiguration.Get("DBUSER"),serverConfiguration.Get("DBPASSWORD"))
+	
 	srvr.Initialize("srvr")
-	srvr.Port = 51042
+	srvr.Port = serverConfiguration.Get("ServerPort")
 	srvr.StaticFilesFolder = File.Combine(File.DirApp, "www")
 	srvr.Start
+	
+	
+	Log($"Server is up and running at http://localhost:${srvr.Port}"$)
+	Log($"Connected to Database"$$)
 	StartMessageLoop
 	'open browser and navigate to: http://127.0.0.1:51042/
 End Sub
