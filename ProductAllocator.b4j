@@ -8,10 +8,11 @@ Library2=jserver
 Library3=jsql
 Library4=json
 Library5=javaobject
+Library6=bcrypt
 Module1=ShopRegisterationHandler
 Module2=Utility
 NumberOfFiles=1
-NumberOfLibraries=5
+NumberOfLibraries=6
 NumberOfModules=2
 Version=8.5
 @EndOfDesignText@

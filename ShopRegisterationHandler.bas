@@ -54,7 +54,7 @@ Sub Handle(req As ServletRequest, resp As ServletResponse)
 		Dim sqlQuery As String
 		Dim connection As SQL = Main.poolOfConnection.GetConnection
 	
-		sqlQuery = "SELECT id, email_address, password, status, is_deleted, created_at, updated_at, shop_id FROM shop_authentications WHERE email_address = ?"
+		sqlQuery = "SELECT id FROM shop_authentications WHERE email_address = ? AND is_deleted = false"
 
 		Dim queryResultSet As ResultSet = connection.ExecQuery2(sqlQuery,Array(shopEmailAddress))
 	
@@ -64,8 +64,13 @@ Sub Handle(req As ServletRequest, resp As ServletResponse)
 			Return
 		End If
 	
+		Dim bcrypt As BCrypt
+		bcrypt.Initialize("")
+		shopPassword = bcrypt.hashpw(shopPassword,bcrypt.gensalt)
+
 		connection.BeginTransaction
 		Try
+			
 			Dim shopId As JavaObject = Utility.GenerateUUID
 			Dim shopLogoId As JavaObject = Utility.GenerateUUID
 			Dim shopAuthenticationId As JavaObject = Utility.GenerateUUID
@@ -74,15 +79,17 @@ Sub Handle(req As ServletRequest, resp As ServletResponse)
 			connection.ExecNonQuery2(sqlQuery,Array(shopId,shopName.ToUpperCase,"","",False,Utility.GenerateDateTime,Utility.GenerateDateTime))
 		
 			sqlQuery = "INSERT INTO public.shop_authentications(id,shop_id,email_address, password, status, is_deleted, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?);"
-			connection.ExecNonQuery2(sqlQuery,Array(shopAuthenticationId,shopId,shopEmailAddress,shopPassword,"pending",False,Utility.GenerateDateTime,Utility.GenerateDateTime))
+			connection.ExecNonQuery2(sqlQuery,Array(shopAuthenticationId,shopId,shopEmailAddress.ToLowerCase,shopPassword,"pending",False,Utility.GenerateDateTime,Utility.GenerateDateTime))
 		
 			sqlQuery = "INSERT INTO public.shop_logos(id, shop_id, path, is_deleted, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?);"
 			connection.ExecNonQuery2(sqlQuery,Array(shopLogoId,shopId,"",False,Utility.GenerateDateTime,Utility.GenerateDateTime))
 			connection.TransactionSuccessful
+			connection.Close
 			Utility.MapToResponse(201,Utility.ResponseWithOutData(201,True,"Shop was registered successfully","Now proceed to log into the shop account that was created"),resp)
 			Return
 		Catch
 			connection.Rollback
+			connection.Close
 			Utility.MapToResponse(500,Utility.GenerateErrorMap(500,"Something went wrong. Try again","Could not complete Operation"),resp)
 			Return
 		End Try

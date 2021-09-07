@@ -7,6 +7,6 @@ ModuleBreakpoints2=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
 ModuleClosedNodes2=
-NavigationStack=Utility,GenerateUUID,22,3,Utility,MapToResponse,21,6,Utility,ParseUUIDFromString,27,0,Utility,GenerateDateTime,34,0,Utility,IsUUID,42,0,Utility,RequestToMap,64,6,Utility,ResponseWithList,73,0,Main,AppStart,11,0,Main,Process_Globals,7,0,ShopRegisterationHandler,Handle,83,6
+NavigationStack=Main,Process_Globals,7,0,Main,AppStart,13,0,Utility,LoadConfigurationSetting,6,0,ShopRegisterationHandler,Handle,50,6
 SelectedBuild=0
 VisibleModules=2,1
