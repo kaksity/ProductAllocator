@@ -84,13 +84,17 @@ Sub GenerateJWTToken(AgentID As String,PrivateKey As JavaObject) As String
 	Dim IOJwtsJO As JavaObject
 	
 	IOJwtsJO.InitializeStatic("io.jsonwebtoken.Jwts")
-	Return	$"Bearer ${IOJwtsJO.RunMethodJO("builder",Null).RunMethodJO("claim",Array("Agent",AgentID)).RunMethodJO("signWith",Array(PrivateKey)).RunMethod("compact",Null)}"$
+	Return	$"Bearer ${IOJwtsJO.RunMethodJO("builder",Null).RunMethodJO("setSubject",Array(AgentID)).RunMethodJO("signWith",Array(PrivateKey)).RunMethod("compact",Null)}"$
 End Sub
 
-Sub ParseJWTToken(JWTToken As String , PublicKey As JavaObject) As JavaObject
+Sub ParseJWTToken(JWTToken As String , PublicKey As JavaObject) As string
 
 	Dim IOJwtsJO As JavaObject
 	IOJwtsJO.InitializeStatic("io.jsonwebtoken.Jwts")
-	Return IOJwtsJO.RunMethodJO("parserBuilder",Null).RunMethodJO("setSigningKey",Array(PublicKey)).RunMethodJO("build",Null).RunMethodJO("parseClaimsJws",Array(JWTToken))
+	Return IOJwtsJO.RunMethodJO("parserBuilder",Null).RunMethodJO("setSigningKey",Array(PublicKey)).RunMethodJO("build",Null).RunMethodJO("parseClaimsJws",Array(JWTToken)).RunMethodJO("getBody",Null).RunMethod("getSubject",Null)
 	
+End Sub
+
+Sub GetTokenStringFromHeader(token As String) As String
+	Return token.SubString(7)
 End Sub

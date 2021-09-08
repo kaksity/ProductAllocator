@@ -9,12 +9,14 @@ Library3=jsql
 Library4=json
 Library5=javaobject
 Library6=bcrypt
-Module1=ShopLoginHandler
-Module2=ShopRegisterationHandler
-Module3=Utility
+Module1=AuthenticationFilter
+Module2=ShopLoginHandler
+Module3=ShopMeHandler
+Module4=ShopRegisterationHandler
+Module5=Utility
 NumberOfFiles=1
 NumberOfLibraries=6
-NumberOfModules=3
+NumberOfModules=5
 Version=8.5
 @EndOfDesignText@
 #Region Project Attributes 
@@ -46,8 +48,13 @@ Sub AppStart (Args() As String)
 	srvr.Initialize("srvr")
 	srvr.Port = serverConfiguration.Get("ServerPort")
 	srvr.StaticFilesFolder = File.Combine(File.DirApp, "www")
+	
 	srvr.AddHandler("/api/v1/shops/register","ShopRegisterationHandler",False)
 	srvr.AddHandler("/api/v1/shops/login","ShopLoginHandler",False)
+	srvr.AddHandler("/api/v1/shops/in/me","ShopMeHandler",False)
+	
+	srvr.AddFilter("/api/v1/shops/in/*","AuthenticationFilter",False)
+	
 	srvr.Start
 	ConfigureKeys
 	
