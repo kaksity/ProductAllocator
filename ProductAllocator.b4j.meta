@@ -16,6 +16,6 @@ ModuleClosedNodes2=
 ModuleClosedNodes3=
 ModuleClosedNodes4=
 ModuleClosedNodes5=
-NavigationStack=Utility,ResponseWithData,68,0,Utility,ResponseWithOutData,65,0,AuthenticationFilter,Initialize,8,0,Utility,GetTokenStringFromHeader,92,6,ShopRegisterationHandler,Handle,85,0,ShopLoginHandler,Handle,62,0,Utility,GenerateJWTToken,80,3,Utility,ParseJWTToken,83,6,AuthenticationFilter,Filter,29,6,ShopMeHandler,Handle,27,6
+NavigationStack=Utility,ResponseWithOutData,65,0,AuthenticationFilter,Initialize,8,0,Utility,GetTokenStringFromHeader,92,6,ShopLoginHandler,Handle,62,0,Utility,GenerateJWTToken,80,3,Utility,ParseJWTToken,83,6,AuthenticationFilter,Filter,29,6,ShopMeHandler,Initialize,8,0,ShopRegisterationHandler,Handle,81,0,ShopMeHandler,Handle,65,6
 SelectedBuild=0
 VisibleModules=3,1,5,2,4
