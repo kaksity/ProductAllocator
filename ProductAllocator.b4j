@@ -33,6 +33,9 @@ Version=8.5
 Sub Process_Globals
 	Private srvr As Server
 	Public poolOfConnection As ConnectionPool
+	Public publicKey As JavaObject
+	Public privateKey As JavaObject
+	
 End Sub
 
 Sub AppStart (Args() As String)
@@ -46,11 +49,29 @@ Sub AppStart (Args() As String)
 	srvr.AddHandler("/api/v1/shops/register","ShopRegisterationHandler",False)
 	srvr.AddHandler("/api/v1/shops/login","ShopLoginHandler",False)
 	srvr.Start
-	
+	ConfigureKeys
 	
 	
 	Log($"Server is up and running at http://localhost:${srvr.Port}"$)
-	Log($"Connected to Database"$$)
+	If poolOfConnection.IsInitialized Then
+		Log("Connected to the Database Successfully")
+	Else
+		Log("Unable to Connect to the Database")
+	End If
+
 	StartMessageLoop
 	'open browser and navigate to: http://127.0.0.1:51042/
+End Sub
+
+Sub ConfigureKeys()
+
+	Dim IOSignatureAlgorithJO As JavaObject
+	Dim IOSecurityKeysJO As JavaObject
+	
+	IOSignatureAlgorithJO.InitializeStatic("io.jsonwebtoken.SignatureAlgorithm")
+	IOSecurityKeysJO.InitializeStatic("io.jsonwebtoken.security.Keys")
+	
+	Dim KeyPairJO As JavaObject = IOSecurityKeysJO.RunMethodJO("keyPairFor",Array(IOSignatureAlgorithJO.GetFieldJO("RS256")))
+	privateKey = KeyPairJO.RunMethodJO("getPrivate",Null)
+	publicKey = KeyPairJO.RunMethodJO("getPublic",Null)
 End Sub

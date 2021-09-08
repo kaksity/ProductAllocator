@@ -78,3 +78,19 @@ End Sub
 Sub ResponseWithList(StatusCode As Int, Success As Boolean,Message As String, Description As String,Data As List) As Map
 	Return CreateMap("status_code":StatusCode,"success":Success,"message":Message,"description": Description,"data":Data)
 End Sub
+
+Sub GenerateJWTToken(AgentID As String,PrivateKey As JavaObject) As String
+
+	Dim IOJwtsJO As JavaObject
+	
+	IOJwtsJO.InitializeStatic("io.jsonwebtoken.Jwts")
+	Return	$"Bearer ${IOJwtsJO.RunMethodJO("builder",Null).RunMethodJO("claim",Array("Agent",AgentID)).RunMethodJO("signWith",Array(PrivateKey)).RunMethod("compact",Null)}"$
+End Sub
+
+Sub ParseJWTToken(JWTToken As String , PublicKey As JavaObject) As JavaObject
+
+	Dim IOJwtsJO As JavaObject
+	IOJwtsJO.InitializeStatic("io.jsonwebtoken.Jwts")
+	Return IOJwtsJO.RunMethodJO("parserBuilder",Null).RunMethodJO("setSigningKey",Array(PublicKey)).RunMethodJO("build",Null).RunMethodJO("parseClaimsJws",Array(JWTToken))
+	
+End Sub

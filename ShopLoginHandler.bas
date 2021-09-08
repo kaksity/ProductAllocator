@@ -55,6 +55,7 @@ Sub Handle(req As ServletRequest, resp As ServletResponse)
 		End If
 	
 		Dim hashedPassword As String = queryResultSet.GetString("password")
+		Dim shopLoginId As String = queryResultSet.getstring("shop_id")
 		connection.Close
 		
 		Dim bcrypt As BCrypt
@@ -65,10 +66,11 @@ Sub Handle(req As ServletRequest, resp As ServletResponse)
 			Return
 		End If
 		
-		Utility.MapToResponse(200,Utility.ResponseWithData(200,True,"Login was successful","You have logged in successful. Fill free to explore the api",CreateMap("token":"token")),resp)
+		Utility.MapToResponse(200,Utility.ResponseWithData(200,True,"Login was successful","You have logged in successful. Fill free to explore the api",CreateMap("token":Utility.GenerateJWTToken(shopLoginId,Main.PrivateKey))),resp)
 		Return
 			
 	Catch
+		Log(LastException)
 		Utility.MapToResponse(400,Utility.GenerateErrorMap(400,"Check sent request body","The sent request body must have the representation {shop_email_address:string,shop_password:string}"),resp)
 		Return
 	End Try
