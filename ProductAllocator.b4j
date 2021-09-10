@@ -10,15 +10,16 @@ Library4=json
 Library5=javaobject
 Library6=bcrypt
 Module1=AdminLoginHandler
-Module2=AdminShopsHandler
-Module3=AuthenticationFilter
-Module4=ShopLoginHandler
-Module5=ShopMeHandler
-Module6=ShopRegisterationHandler
-Module7=Utility
+Module2=AdminProductHandler
+Module3=AdminShopsHandler
+Module4=AuthenticationFilter
+Module5=ShopLoginHandler
+Module6=ShopMeHandler
+Module7=ShopRegisterationHandler
+Module8=Utility
 NumberOfFiles=1
 NumberOfLibraries=6
-NumberOfModules=7
+NumberOfModules=8
 Version=8.5
 @EndOfDesignText@
 #Region Project Attributes 
@@ -54,6 +55,7 @@ Sub AppStart (Args() As String)
 	'Admin Routes	
 	srvr.AddHandler("/api/v1/admin/login","AdminLoginHandler",False)
 	srvr.AddHandler("/api/v1/admin/in/shops","AdminShopsHandler",False)
+	srvr.AddHandler("/api/v1/admin/in/products","AdminProductHandler",False)
 	
 	'Shop Routes
 	srvr.AddHandler("/api/v1/shops/register","ShopRegisterationHandler",False)
