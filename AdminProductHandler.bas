@@ -14,7 +14,54 @@ Public Sub Initialize
 End Sub
 
 Sub Handle(req As ServletRequest, resp As ServletResponse)
+	If req.Method <> "GET" And req.Method <> "POST" And req.Method <> "DELETE" Then 
+		Utility.MapToResponse(404,Utility.GenerateErrorMap(404,"Only GET POST AND DELETE methods are allowed on this endpoint",""),resp)
+		Return
+	End If
 	
+	If req.Method = "DELETE" Then
+		Dim idRequestParameter As String = req.GetParameter("product-id")
+		
+		If idRequestParameter.Trim = "" Then
+			Utility.MapToResponse(400,Utility.GenerateErrorMap(400,"Product Id is required","Since we are requesting to delete a product, product-id has to be added to the request url"),resp)
+			Return
+		End If
+		If Utility.IsUUID(idRequestParameter) = False Then
+			Utility.MapToResponse(400,Utility.GenerateErrorMap(400,"Product Id is invalid","Product Id must be a valid UUID"),resp)
+			Return
+		End If
+		
+		Try
+			'Check if the product exists
+			Dim connection As SQL = Main.poolOfConnection.GetConnection
+			Dim sqlQuery As String
+			Dim queryResultSet As ResultSet
+			Dim productIdObj As JavaObject = Utility.ParseUUIDFromString(idRequestParameter)
+			
+			sqlQuery = "SELECT id FROM products WHERE id = ? AND is_deleted=false"
+			
+			queryResultSet = connection.ExecQuery2(sqlQuery,Array(productIdObj))
+			
+			If queryResultSet.NextRow = False Then
+				connection.Close
+				Utility.MapToResponse(404,Utility.GenerateErrorMap(404,"Product record was not found","Check the product id as this product id does not exist"),resp)
+				Return
+			End If
+			
+			sqlQuery = "UPDATE products SET is_deleted=true WHERE id = ? AND is_deleted = false"
+			connection.ExecNonQuery2(sqlQuery, Array(productIdObj))
+			
+			connection.Close
+			Utility.MapToResponse(200,Utility.GenerateErrorMap(200,"Product record was deleted successfully","Product with this id no longer exist in the database"),resp)
+			Return
+			
+		Catch
+			connection.Close
+			Utility.MapToResponse(500,Utility.GenerateErrorMap(500,"Something went wrong. Try again","Could not complete Operation"),resp)
+			Return
+		End Try
+
+	End If
 	If req.Method = "POST" Then
 		Try
 			Dim requestBodyMap As Map = Utility.RequestToMap(req.InputStream)
