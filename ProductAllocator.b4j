@@ -60,6 +60,9 @@ Sub AppStart (Args() As String)
 	srvr.AddHandler("/api/v1/shops/login","ShopLoginHandler",False)
 	srvr.AddHandler("/api/v1/shops/in/me","ShopMeHandler",False)
 	
+	'Admin Filters 
+	srvr.AddFilter("/api/v1/admin/in/*","AuthenticationFilter",False)
+	
 	'Shop Filters
 	srvr.AddFilter("/api/v1/shops/in/*","AuthenticationFilter",False)
 	
