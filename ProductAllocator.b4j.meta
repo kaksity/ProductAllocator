@@ -25,6 +25,6 @@ ModuleClosedNodes5=
 ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
-NavigationStack=ShopLoginHandler,Handle,10,0,AdminLoginHandler,Handle,46,5,AdminShopsHandler,Initialize,7,0,AdminShopsHandler,Class_Globals,1,0,AdminShopsHandler,Handle,87,6,AdminProductHandler,Initialize,7,0,ShopMeHandler,Handle,68,6,AdminProductHandler,Handle,49,6,Main,ConfigureKeys,73,0,Main,AppStart,41,6
+NavigationStack=Main,Process_Globals,14,0,Main,ConfigureKeys,64,0,Main,AppStart,30,6,AdminShopsHandler,Class_Globals,2,0,ShopMeHandler,Class_Globals,1,0,AdminShopsHandler,Handle,99,6,AdminProductHandler,Class_Globals,3,0,AdminProductHandler,Initialize,8,0,ShopMeHandler,Handle,64,6,AdminProductHandler,Handle,10,6
 SelectedBuild=0
 VisibleModules=1,3,6,2

@@ -14,6 +14,7 @@ Public Sub Initialize
 End Sub
 
 Sub Handle(req As ServletRequest, resp As ServletResponse)
+	
 	If req.Method = "POST" Then
 		Try
 			Dim requestBodyMap As Map = Utility.RequestToMap(req.InputStream)
@@ -33,7 +34,7 @@ Sub Handle(req As ServletRequest, resp As ServletResponse)
 			End If
 			
 			Dim connection As SQL = Main.poolOfConnection.GetConnection
-			Dim sqlQuery As String 
+			Dim sqlQuery As String
 			
 			Dim productId As JavaObject = Utility.GenerateUUID
 			Dim adminId As String = Utility.ParseJWTToken(Utility.GetTokenStringFromHeader(req.GetHeader("authorization")),Main.publicKey)
@@ -41,7 +42,7 @@ Sub Handle(req As ServletRequest, resp As ServletResponse)
 			
 			Try
 				sqlQuery = "INSERT INTO public.products(id, admin_id, name, price, is_deleted, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
-				connection.ExecNonQuery2(sqlQuery,Array(productId,adminIdObj,productName.ToUpperCase,productPrice,False,Utility.GenerateDateTime,Utility.GenerateDateTime))		
+				connection.ExecNonQuery2(sqlQuery,Array(productId,adminIdObj,productName.ToUpperCase,productPrice,False,Utility.GenerateDateTime,Utility.GenerateDateTime))
 				connection.Close()
 				
 				Utility.MapToResponse(200,Utility.ResponseWithOutData(200,True,"Product record was created successfully","you can get created products records"),resp)
@@ -57,5 +58,43 @@ Sub Handle(req As ServletRequest, resp As ServletResponse)
 			Utility.MapToResponse(400,Utility.GenerateErrorMap(400,"Check sent request body","The sent request body must have the representation {product_name:string,product_price:number}"),resp)
 			Return
 		End Try
+	End If
+	If req.Method = "GET" Then
+		Dim typeRequestParameter As String  = req.GetParameter("type")
+		
+		
+		'Check if the type is given and is either list or details
+		If typeRequestParameter = "" Or (typeRequestParameter <> "details" And typeRequestParameter <> "list") Then
+			Utility.MapToResponse(400,Utility.GenerateErrorMap(400,"Specify the type of request which must be details or list","type has to be added to the request url, and the corresponding value must be list or details"),resp)
+			Return
+		End If
+		
+		If typeRequestParameter = "list" Then
+			Dim connection As SQL = Main.poolOfConnection.GetConnection
+			Dim sqlQuery As String
+			Dim listOfData As List
+			
+			Dim queryResultSet As ResultSet
+		
+		
+			listOfData.Initialize
+			
+			sqlQuery = "SELECT pdt.id,adm.full_name, pdt.name,pdt.price FROM products pdt INNER JOIN admins adm ON pdt.admin_id = adm.id WHERE pdt.is_deleted=false ORDER BY pdt.created_at ASC"
+			
+			Try
+				queryResultSet = connection.ExecQuery(sqlQuery)
+			
+				Do While queryResultSet.NextRow
+					listOfData.Add(CreateMap("product_id":queryResultSet.GetString("id"),"product_name":queryResultSet.GetString("name"),"product_price":queryResultSet.GetLong("price"),"added_by":queryResultSet.GetString("full_name")))
+				Loop
+
+				connection.Close
+				Utility.MapToResponse(200,Utility.ResponseWithList(200,True,"Retrived list of products","Admin can now update this record",listOfData),resp)
+				Return
+			Catch
+				Utility.MapToResponse(500,Utility.GenerateErrorMap(500,"Something went wrong. Try again","Could not complete Operation"),resp)
+				Return
+			End Try
+		End If
 	End If
 End Sub
